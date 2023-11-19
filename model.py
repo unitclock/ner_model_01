@@ -27,7 +27,7 @@ class NerModel(nn.Module):
         self.__torchmax = torch.max
         return
         
-    def forward(self,input_ids,attention_mask):
+    def forward(self,input_ids,attention_mask,predict=False):
         token_series = self.__bert(input_ids,attention_mask)[0]
         token_series = self.__dropout(token_series)
         a = token_series.shape
@@ -38,6 +38,7 @@ class NerModel(nn.Module):
         # logits = torch.max(probabilities,dim=2)
         logits = token_series.view(
             (batch_size * seq_len, ner_class_num))
+        
 
         return logits
         
