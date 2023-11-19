@@ -34,14 +34,14 @@ def handle_raw_data(raw_path:str,csv_path:str):
             words = r["text"]
             if len(r["text"]) > 510:
                 words = words[0:511]
-            bio = ["O"]*len(r["text"])
+            bio = ["O"]*len(words)
             for e in r["entities"]:
                 e_type = e["type"]
                 e_start =int(e["start_idx"])
                 e_end = int(e["end_idx"])
-                if e_end >511:
+                if e_end >510:
                     continue
-                if e_end - e_start == 1 :
+                elif e_end - e_start == 1 :
                     bio[e_start] = "S-"+e_type
                 elif e_end- e_start == 2:
                     bio[e_start] = "B-"+e_type
@@ -52,7 +52,7 @@ def handle_raw_data(raw_path:str,csv_path:str):
                         bio[i]="I-"+e_type
                     bio[e_end-1]="E-"+e_type
                 else:
-                    print("error")
+                    raise BaseException
             words = list(words)
             if len(words) != len(bio) or len(words)>510 or len(bio)>510:
                 print(len(words),len(bio))
